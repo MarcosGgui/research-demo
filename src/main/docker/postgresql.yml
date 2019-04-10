@@ -1,0 +1,11 @@
+version: '2'
+services:
+    researchdemo-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/ResearchDemo/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=ResearchDemo
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

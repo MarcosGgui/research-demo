@@ -1,0 +1,35 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.research.demo"
+        },
+        "jhipsterVersion": "5.8.1",
+        "applicationType": "monolith",
+        "baseName": "ResearchDemo",
+        "packageName": "com.research.demo",
+        "packageFolder": "com/research/demo",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "ehcache",
+        "enableHibernateCache": true,
+        "websocket": false,
+        "databaseType": "sql",
+        "devDatabaseType": "postgresql",
+        "prodDatabaseType": "postgresql",
+        "searchEngine": false,
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "ZDAzOGViZmJhZmNmMmNjNTc2YTVmOTgyN2ZhNWMwNzNkYmZkYjRkNDE3NzkwMzJlYjRhM2ZlNTc3NmUyZmQwNzI1NzFmNDA5YWMyOWFlMTVhMDI1N2IyODc0ZTlkY2VjMjRmZDFlZWE2YTBjMDBkNDJkZTcwMjhmNWViYTBiNGU=",
+        "clientFramework": "angularX",
+        "useSass": false,
+        "clientPackageManager": "npm",
+        "testFrameworks": [],
+        "jhiPrefix": "jhi",
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": [],
+        "enableTranslation": false
+    }
+}
