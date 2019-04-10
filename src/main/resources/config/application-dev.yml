@@ -39,6 +39,7 @@ spring:
         url: jdbc:postgresql://localhost:5432/research
         username: research
         password: research
+
         hikari:
             poolName: Hikari
             auto-commit: false
