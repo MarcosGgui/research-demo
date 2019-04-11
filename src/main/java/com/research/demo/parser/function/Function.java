@@ -1,7 +1,7 @@
-package com.research.demo.domain;
+package com.research.demo.parser.function;
 
 /**
- * Function Entity
+ * Define the functions can be used in the expression.
  *
  * @author marcosgui
  */
@@ -20,6 +20,10 @@ public abstract class Function{
         this.name = name;
     }
 
+
+    /**
+     * Apply the function
+     */
     public abstract double apply(double... args);
 
     public String getName() {

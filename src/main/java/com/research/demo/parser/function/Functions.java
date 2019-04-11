@@ -1,4 +1,6 @@
-package com.research.demo.domain;
+package com.research.demo.parser.function;
+
+import com.research.demo.parser.function.Function;
 
 /**
  * Define the custom functions
@@ -17,7 +19,9 @@ public class Functions{
 
     private static final int INDEX_COUNT = 4;
 
-    private static final Function[] BUILT_FUNCTIONS = new Function[5];
+    private static final int INDEX_BASE_64 = 5;
+
+    private static final Function[] BUILT_FUNCTIONS = new Function[6];
 
     static {
         BUILT_FUNCTIONS[INDEX_AVG] = new Function("avg"){
@@ -50,9 +54,15 @@ public class Functions{
                 return 0;
             }
         };
+        BUILT_FUNCTIONS[INDEX_BASE_64] = new Function("base-64"){
+            @Override
+            public double apply(double... args) {
+                return 0;
+            }
+        };
     }
 
-    public static Function getBuiltFunctions(String functionName) {
+    public static Function getBuiltinFunction(String functionName) {
         String name = functionName.toLowerCase();
         switch (name) {
             case "avg":
@@ -65,6 +75,8 @@ public class Functions{
                 return BUILT_FUNCTIONS[INDEX_MAX];
             case "count":
                 return BUILT_FUNCTIONS[INDEX_COUNT];
+            case "base-64":
+                return BUILT_FUNCTIONS[INDEX_BASE_64];
             default:
                 return null;
         }

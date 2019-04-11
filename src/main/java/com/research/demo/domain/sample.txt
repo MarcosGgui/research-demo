@@ -1,0 +1,17 @@
+[
+{name: fieldName1, displayName: Field}
+]
+
+
+functionString = ''
+for : field in filedList
+    functionString.replace("["+field.displayName+"]", name)
+
+for : field in filedList
+    functionString.replace(name, "["+field.displayName+"]")
+
+{"fieldName1": "hello abc"}
+
+1. SUM([Field]) ==> SUM(fieldName1)
+2. SUM(fieldName1) ==> SUM, fieldName1
+3.
