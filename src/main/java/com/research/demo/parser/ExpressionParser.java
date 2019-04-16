@@ -27,7 +27,9 @@ public class ExpressionParser{
 
     public String build() {
         for (Field variable : variables) {
-            this.expression = this.expression.replace('[' + variable.getDisplayName() + ']', variable.getName());
+            if (this.expression.contains(variable.getDisplayName())) {
+                this.expression = this.expression.replace('[' + variable.getDisplayName() + ']', variable.getName());
+            }
         }
         return this.expression.trim();
     }
@@ -35,6 +37,14 @@ public class ExpressionParser{
     String parseToScript() {
         Expression e;
         ExpressionBuilder expressionBuilder = new ExpressionBuilder(this.expression)
+            .function(new Function("LENGTH"){
+                @Override
+                public double apply(double... args) {
+                    expression = formatFunctionExpression("LENGTH");
+                    functionValue = "length";
+                    return 0;
+                }
+            })
             .function(new Function("AVG", 1){
                 @Override
                 public double apply(double... args) {
@@ -66,7 +76,8 @@ public class ExpressionParser{
                     functionValue = "sum()";
                     return 0;
                 }
-            }).function(new Function("YEAR", 1){
+            })
+            .function(new Function("YEAR", 1){
                 @Override
                 public double apply(double... args) {
                     expression = formatFunctionExpression("YEAR");
@@ -82,7 +93,7 @@ public class ExpressionParser{
                     return 0;
                 }
             })
-            .function(new Function("DAY_OF_MONTH"){
+            .function(new Function("DAY_OF_MONTH", 1){
                 @Override
                 public double apply(double... args) {
                     expression = formatFunctionExpression("DAY_OF_MONTH");
@@ -97,15 +108,28 @@ public class ExpressionParser{
                     functionValue = "date.dayOfWeek";
                     return 0;
                 }
+            })
+            .function(new Function("FIELDS_AVG", 1){
+                @Override
+                public double apply(double... args) {
+                    expression = formatFunctionExpression("FIELDS_AVG");
+                    functionValue = "value";
+                    return 0;
+                }
             });
         for (Field v : variables) {
-            expressionBuilder.variable(v.getName());
+            if (this.expression.contains(v.getName())) {
+                expressionBuilder.variable(v.getName());
+            }
         }
         e = expressionBuilder.build();
-
         for (Field v : variables) {
-            e.setVariable(v.getName(), 0);
-            e.evaluate();
+            if (this.expression.contains(v.getName())) {
+                e.setVariable(v.getName(), 0);
+            }
+        }
+        e.evaluate();
+        for (Field v : variables) {
             this.expression = this.expression.replace(v.getName(), "doc['" + v.getName() + "']." + functionValue);
         }
         return expression;
@@ -137,6 +161,14 @@ public class ExpressionParser{
         for (Character ch : output) {
             builder.append(ch);
         }
-        return this.expression.replace(functionName + "(" + builder.toString() + ")", builder.toString());
+        this.expression = this.expression.replace(functionName + "(" + builder.toString() + ")", builder.toString());
+        switch (functionName) {
+            case "FIELDS_AVG":
+                this.expression = "(" + this.expression + ")/" + this.variables.size();
+                break;
+            default:
+                break;
+        }
+        return this.expression;
     }
 }
