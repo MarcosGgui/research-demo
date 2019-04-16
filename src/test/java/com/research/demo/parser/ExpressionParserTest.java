@@ -21,12 +21,14 @@ public class ExpressionParserTest{
 
     private static final Log log = LogFactory.getLog(ExpressionParserTest.class);
 
-    private static final String TEST_MONTH_FUNCTION = "MONTH([A])";
-    private static final String TEST_SUM_FUNCTION = "SUM([A])";
-    private static final String TEST_FAILED_EXPRESSION = "month([A])";
-    private static final String TEST_INVALID_EXPRESSION = "Month([A]";
-    private static final String TEST_MONTH_RESULT = "doc['field1'].date.monthOfYear";
+    private static final String TEST_MONTH_OF_YEAR = "MONTH_OF_YEAR([A])";
+    private static final String TEST_DAY_OF_MONTH = "DAY_OF_MONTH([A])";
+    private static final String TEST_SUM = "SUM([A])";
+    private static final String TEST_FAILED_EXPRESSION = "month_of_year([A])";
+    private static final String TEST_INVALID_EXPRESSION = "MONTH_OF_YEAR([A]";
+    private static final String TEST_MONTH_OF_YEAR_RESULT = "doc['field1'].date.monthOfYear";
     private static final String TEST_SUM_RESULT = "doc['field1'].sum()";
+    private static final String TEST_DAY_OF_MONTH_RESULT = "doc['field1'].date.dayOfMonth";
     private static final String TEST_FIELD_NAME = "field1";
     private static final String TEST_FIELD_DISPLAYNAME = "A";
 
@@ -42,19 +44,24 @@ public class ExpressionParserTest{
     }
 
     @Test
-    public void testMonthFunction() {
-        ExpressionParser parser = new ExpressionParser(TEST_MONTH_FUNCTION, this.fields);
+    public void testMonthOfYear() {
+        ExpressionParser parser = new ExpressionParser(TEST_MONTH_OF_YEAR, this.fields);
         parser.build();
-        String result = parser.parseToScript();
-        assertThat(result).isEqualTo(TEST_MONTH_RESULT);
+        assertThat(parser.parseToScript()).isEqualTo(TEST_MONTH_OF_YEAR_RESULT);
+    }
+
+    @Test
+    public void testDayOfMonth() {
+        ExpressionParser parser = new ExpressionParser(TEST_DAY_OF_MONTH, this.fields);
+        parser.build();
+        assertThat(parser.parseToScript()).isEqualTo(TEST_DAY_OF_MONTH_RESULT);
     }
 
     @Test
     public void testSumFunction() {
-        ExpressionParser parser = new ExpressionParser(TEST_SUM_FUNCTION, this.fields);
+        ExpressionParser parser = new ExpressionParser(TEST_SUM, this.fields);
         parser.build();
-        String result = parser.parseToScript();
-        assertThat(result).isEqualTo(TEST_SUM_RESULT);
+        assertThat(parser.parseToScript()).isEqualTo(TEST_SUM_RESULT);
     }
 
     @Test
@@ -80,5 +87,4 @@ public class ExpressionParserTest{
             log.error(e1.getMessage());
         }
     }
-
 }
