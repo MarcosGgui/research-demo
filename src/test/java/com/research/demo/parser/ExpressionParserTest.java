@@ -6,7 +6,6 @@ import com.research.demo.ResearchDemoApp;
 import com.research.demo.domain.Field;
 import java.util.HashSet;
 import java.util.Set;
-import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -21,64 +20,39 @@ public class ExpressionParserTest{
 
     private static final Log log = LogFactory.getLog(ExpressionParserTest.class);
 
-    private static final String TEST_MONTH_FUNCTION = "Month([A])";
-    private static final String TEST_SUM_FUNCTION = "SUM([A])";
-    private static final String TEST_FAILED_EXPRESSION = "month([A])";
-    private static final String TEST_INVALID_EXPRESSION = "Month([A]";
-    private static final String TEST_MONTH_RESULT = "doc['field1'].date.monthOfYear";
-    private static final String TEST_SUM_RESULT = "doc['field1'].sum()";
+    private static final String TEST_PARSE_EXPRESSION = "Year([A]) + 1";
+
+    private static final String TEST_PARSE_RESULT = "doc['field1'].date.year + 1";
+
     private static final String TEST_FIELD_NAME = "field1";
+
     private static final String TEST_FIELD_DISPLAYNAME = "A";
+
+    private static final String TEST_FIELD_NAME_2 = "field2";
+
+    private static final String TEST_FIELD_DISPLAYNAME_2 = "B";
 
     private Set<Field> fields;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         Field field = new Field();
         field.setName(TEST_FIELD_NAME);
         field.setDisplayName(TEST_FIELD_DISPLAYNAME);
+        Field field2 = new Field();
+        field2.setName(TEST_FIELD_NAME_2);
+        field2.setDisplayName(TEST_FIELD_DISPLAYNAME_2);
         this.fields = new HashSet<>();
         this.fields.add(field);
+//        this.fields.add(field2);
     }
 
     @Test
-    public void testMonthFunction() {
-        ExpressionParser parser = new ExpressionParser(TEST_MONTH_FUNCTION, this.fields);
+    public void testParseStringToEsScript() throws Exception {
+        ExpressionParser parser = new ExpressionParser(TEST_PARSE_EXPRESSION, this.fields);
         parser.build();
         String result = parser.parseToScript();
-        assertThat(result).isEqualTo(TEST_MONTH_RESULT);
+        assertThat(result).isEqualTo(TEST_PARSE_RESULT);
+        log.info("Result is: " + result);
     }
-
-    @Test
-    public void testSumFunction() {
-        ExpressionParser parser = new ExpressionParser(TEST_SUM_FUNCTION, this.fields);
-        parser.build();
-        String result = parser.parseToScript();
-        assertThat(result).isEqualTo(TEST_SUM_RESULT);
-    }
-
-    @Test
-    public void assertThatNoSuchFunctionTest() {
-        ExpressionParser parser = new ExpressionParser(TEST_FAILED_EXPRESSION, this.fields);
-        try {
-            parser.build();
-            String result = parser.parseToScript();
-            assertThat(result).isNull();
-        } catch (UnknownFunctionOrVariableException e1) {
-            log.error(e1.getMessage());
-        }
-    }
-
-    @Test
-    public void assertThatExistInvalidExpression() {
-        ExpressionParser parser = new ExpressionParser(TEST_INVALID_EXPRESSION, this.fields);
-        try {
-            parser.build();
-            String result = parser.parseToScript();
-            assertThat(result).isNull();
-        } catch (IllegalArgumentException e1) {
-            log.error(e1.getMessage());
-        }
-    }
-
 }
