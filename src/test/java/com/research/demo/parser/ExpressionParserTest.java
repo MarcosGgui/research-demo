@@ -1,14 +1,13 @@
 package com.research.demo.parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.research.demo.ResearchDemoApp;
 import com.research.demo.domain.Field;
 import java.util.HashSet;
 import java.util.Set;
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ResearchDemoApp.class)
 public class ExpressionParserTest{
-
-    private static final Log log = LogFactory.getLog(ExpressionParserTest.class);
 
     private static final String TEST_MONTH_OF_YEAR = "MONTH_OF_YEAR([A])";
     private static final String TEST_DAY_OF_MONTH = "DAY_OF_MONTH([A])";
@@ -41,13 +38,9 @@ public class ExpressionParserTest{
     @Before
     public void setUp() {
         this.fields = new HashSet<>();
-        Field field = new Field();
-        field.setName(TEST_FIELD_NAME);
-        field.setDisplayName(TEST_FIELD_DISPLAYNAME_A);
+        Field field = new Field(TEST_FIELD_NAME, TEST_FIELD_DISPLAYNAME_A);
         this.fields.add(field);
-        Field field2 = new Field();
-        field2.setName(TEST_FIELD_NAME_2);
-        field2.setDisplayName(TEST_FIELD_DISPLAYNAME_B);
+        Field field2 = new Field(TEST_FIELD_NAME_2, TEST_FIELD_DISPLAYNAME_B);
         this.fields.add(field2);
     }
 
@@ -80,10 +73,24 @@ public class ExpressionParserTest{
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void setTestInvalidExpression() throws IllegalArgumentException {
+    public void testInvalidExpression() throws IllegalArgumentException {
         ExpressionParser parser = new ExpressionParser(TEST_INVALID_EXPRESSION, this.fields);
         parser.build();
         parser.parseToScript();
+    }
+
+    /**
+     * Test assertThatThrownBy():
+     *
+     * @throws IllegalArgumentException Exception
+     */
+    @Test
+    public void testException() throws IllegalArgumentException {
+        ExpressionParser parser = new ExpressionParser(TEST_INVALID_EXPRESSION, this.fields);
+        assertThatThrownBy(() -> {
+            parser.build();
+            parser.parseToScript();
+        }).hasMessage("Mismatched parentheses detected. Please check the expression");
     }
 
     @Test
@@ -91,5 +98,12 @@ public class ExpressionParserTest{
         ExpressionParser parser = new ExpressionParser(TEST_FIELDS_AVG_EXPRESSION, this.fields);
         parser.build();
         assertThat(parser.parseToScript()).isEqualTo(TEST_FIELDS_AVG_RESULT);
+    }
+
+    @Test
+    public void testMinFunction() {
+        ExpressionParser parser = new ExpressionParser("MIN([A])", this.fields);
+        parser.build();
+        assertThat(parser.parseToScript()).isEqualTo("doc['field1'].min()");
     }
 }

@@ -8,6 +8,14 @@ public class Field{
 
     private String displayName;
 
+    public Field(String name, String displayName) {
+        this.name = name;
+        this.displayName = displayName;
+    }
+
+    public Field() {
+    }
+
     public String getName() {
         return name;
     }
