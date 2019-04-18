@@ -38,10 +38,15 @@ public class ExpressionParserTest{
     @Before
     public void setUp() {
         this.fields = new HashSet<>();
-        Field field = new Field(TEST_FIELD_NAME, TEST_FIELD_DISPLAYNAME_A);
+        Field field = new Field();
+        field.setName(TEST_FIELD_NAME);
+        field.setDisplayName(TEST_FIELD_DISPLAYNAME_A);
         this.fields.add(field);
-        Field field2 = new Field(TEST_FIELD_NAME_2, TEST_FIELD_DISPLAYNAME_B);
+        Field field2 = new Field();
+        field2.setName(TEST_FIELD_NAME_2);
+        field2.setDisplayName(TEST_FIELD_DISPLAYNAME_B);
         this.fields.add(field2);
+
     }
 
     @Test
