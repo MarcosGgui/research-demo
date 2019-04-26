@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.cluster.storedscripts.PutStoredScriptRequest;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -25,9 +24,12 @@ import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.UpdateByQueryRequest;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
+/**
+ * ElasticsearchDataService:
+ * @author marcosgui
+ */
 @Service
 public class ElasticsearchDataService{
 
@@ -41,9 +43,10 @@ public class ElasticsearchDataService{
     long updateCount = 0;
 
     public void updateEsDataByQuery(String esIndex) {
+        String script = "ctx._source.newAge = ctx._source.age * 2";
         UpdateByQueryRequest request = new UpdateByQueryRequest(esIndex);
         request
-            .setScript(new Script(ScriptType.INLINE, "painless", "ctx._source.salary = 1000", Collections.emptyMap()));
+            .setScript(new Script(ScriptType.INLINE, "painless",script, Collections.emptyMap()));
         request.setQuery(QueryBuilders.matchQuery("age", 18));
         client.updateByQueryAsync(request, RequestOptions.DEFAULT, new ActionListener<BulkByScrollResponse>(){
             @Override
@@ -66,7 +69,7 @@ public class ElasticsearchDataService{
         {
             builder.startObject("properties");
             {
-                builder.startObject("salary");
+                builder.startObject("newAge");
                 {
                     builder.field("type", "long");
                 }
@@ -117,22 +120,16 @@ public class ElasticsearchDataService{
         });
     }
 
-    public void searchRequest(String esIndex) {
-        SearchRequest request = new SearchRequest(esIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        builder.query(QueryBuilders.matchQuery("id", ""));
-    }
-
     public void addFieldByScript() throws IOException {
         PutStoredScriptRequest request = new PutStoredScriptRequest();
-        request.id("-NqqTmoBm7gfewc_FP3p");
+        request.id("-dqqTmoBm7gfewc_Sf3R");
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
             builder.startObject("script");
             {
                 builder.field("lang", "painless");
-                builder.field("source", "doc['age'].value + 2000");
+                builder.field("source", "doc['newAge'].value doc['age'].value * 2");
             }
             builder.endObject();
         }
