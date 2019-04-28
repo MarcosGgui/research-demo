@@ -2,13 +2,17 @@ package com.research.demo.web.rest;
 
 import com.research.demo.service.ElasticsearchDataService;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ElasticsearchDataResource: CURD manage o
+ *
  * @author marcosgui
  */
 @RestController
@@ -32,8 +36,10 @@ public class ElasticsearchDataResource{
         esDataService.removeFieldByIndex(esIndex);
     }
 
-    @PostMapping("/script/store-script")
-    public void createFieldByPutStoredScript() throws IOException {
-        esDataService.addFieldByScript();
+    @PostMapping("/script/query-script/{esIndex}")
+    public List<Map> createFieldByPutStoredScript(@PathVariable("esIndex") String esIndex,
+        @RequestParam("script") String script, @RequestParam("fieldName") String fieldName) throws IOException {
+//        esDataService.addFieldByScript();
+        return esDataService.searchByScript(esIndex, fieldName, script);
     }
 }
