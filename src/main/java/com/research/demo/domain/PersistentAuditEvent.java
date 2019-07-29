@@ -35,6 +35,10 @@ public class PersistentAuditEvent implements Serializable {
     @Column(name = "event_type")
     private String auditEventType;
 
+    @Lob
+    @Column(name = "entity_value")
+    private String entityValue;
+
     @ElementCollection
     @MapKeyColumn(name = "name")
     @Column(name = "value")
@@ -94,6 +98,18 @@ public class PersistentAuditEvent implements Serializable {
         return !(persistentAuditEvent.getId() == null || getId() == null) && Objects.equals(getId(), persistentAuditEvent.getId());
     }
 
+    public String getEntityValue() {
+        return entityValue;
+    }
+
+    public void setEntityValue(String entityValue) {
+        this.entityValue = entityValue;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
@@ -102,9 +118,12 @@ public class PersistentAuditEvent implements Serializable {
     @Override
     public String toString() {
         return "PersistentAuditEvent{" +
-            "principal='" + principal + '\'' +
+            "id=" + id +
+            ", principal='" + principal + '\'' +
             ", auditEventDate=" + auditEventDate +
             ", auditEventType='" + auditEventType + '\'' +
+            ", entityValue='" + entityValue + '\'' +
+            ", data=" + data +
             '}';
     }
 }

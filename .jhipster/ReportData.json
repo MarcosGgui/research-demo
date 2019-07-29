@@ -1,0 +1,32 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "esIndex",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cronInfo",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "displayName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190729084202",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "report_data",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": true,
+    "pagination": "no"
+}
